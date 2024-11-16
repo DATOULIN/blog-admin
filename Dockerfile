@@ -1,5 +1,5 @@
 # build stage
-FROM node:18 as build-stage
+FROM node AS build-stage
 
 WORKDIR /app
 
@@ -14,9 +14,9 @@ COPY . .
 RUN npm run build
 
 # production stage
-FROM nginx:stable as production-stage
+FROM nginx:stable-alpine3.20-perl AS production-stage
 
-COPY --from=build-stage /app/build /usr/share/nginx/html
+COPY --from=build-stage /app/dist /usr/share/nginx/html
 
 COPY --from=build-stage /app/nginx.conf /etc/nginx/conf.d/default.conf
 
